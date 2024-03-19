@@ -3,9 +3,11 @@ import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { User } from "../types/api/user";
+import { useMessage } from "./useMessage";
 
 export const useAuth =()=>{
     const history =useHistory();
+    const { showMessage} = useMessage();
 
     const [loading, setLoading] = useState(false);
     
@@ -15,12 +17,13 @@ export const useAuth =()=>{
         axios.get<User>(`https://jsonplaceholder.typicode.com/users/${id}`).
             then((res)=>{
                 if(res.data){
+                    showMessage({ title: 'Login Success', status:'success' });
                     history.push('/home')
                 } else {
-                    alert("Can not find user");
+                    showMessage({title: 'User does not exist', status: 'error'})
                 }
-            }).catch(()=>alert("User does not exist"))
+            }).catch(()=>showMessage({title: 'Login Failed', status: 'error'}))
             .finally(()=>setLoading(false));
-    },[history]); 
+    },[history, showMessage]); 
     return {login, loading}
 }
