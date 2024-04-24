@@ -5,10 +5,11 @@ type Props = {
     imageUrl: string;
     username: string;
     fullName: string;
+    onClick: ()=>void;
 };
 
 export const UserCard:FC<Props>= memo((props)=>{
-    const { imageUrl,username,fullName } = props;
+    const { imageUrl,username,fullName, onClick } = props;
     return(
         <Box 
             w='260px' 
@@ -21,6 +22,7 @@ export const UserCard:FC<Props>= memo((props)=>{
                 cursor: 'pointer', 
                 opacity: 0.8
             }}
+            onClick={onClick}
             >
             <Stack textAlign='center'>
                 <Image

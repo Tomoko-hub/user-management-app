@@ -1,41 +1,16 @@
-/* eslint-disabled react-hooks/exhaustive-deps */
-import { memo,FC, useEffect, useCallback } from "react"
-import { Center,  Spinner, Wrap, WrapItem, useDisclosure } from "@chakra-ui/react";
-import { UserCard } from "../organisms/user/UserCard";
-import { useAllUsers } from "../../hooks/useAllUsers";
-import { UserDetailModal } from "../organisms/user/UserDetailModal";
+import { FC, memo } from "react";
+import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
 
-const UserManagement:FC = memo(()=>{
+type Props = {
+    isOpen: boolean;
+    onClose: () => void;
+};
 
-    const { getUsers, users, loading} = useAllUsers();
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
-    useEffect(()=>getUsers(),[]);
-
-    const onClickUser = useCallback(() =>onOpen(),[]);
+export const UserDetailModal:FC<Props>= memo((props)=>{
+    const { isOpen, onClose} = props;
 
     return(
-        <>
-        {loading ? (
-            <Center h="100vh">
-                <Spinner />
-            </Center>
-        ):(
-            <Wrap p={{ base: 4, md:10 }}>
-                {users.map((user)=>(
-                    <WrapItem key={user.id} mx="auto">
-                        <UserCard 
-                        imageUrl={"https://picsum.photos/160"} 
-                        username={user.username}
-                        fullName={user.name}
-                        onClick={onClickUser}
-                         />
-                    </WrapItem>
-                ))}
-            </Wrap>
-        )}
-        <UserDetailModal isOpen={isOpen} onClose={onClose} />
-        {/* <Modal 
+        <Modal 
         isOpen={isOpen} 
         onClose={onClose} 
         autoFocus={false}
@@ -73,9 +48,6 @@ const UserManagement:FC = memo(()=>{
                             </Stack>
                         </ModalBody>
             </ModalContent>
-        </Modal> */}
-        </>
-    );
-});
-
-export default UserManagement;
+        </Modal>
+    )
+})
