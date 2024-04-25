@@ -1,13 +1,15 @@
 import { FC, memo } from "react";
 import { FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
+import { User } from "../../../types/api/user";
 
 type Props = {
+    user: User | null;
     isOpen: boolean;
     onClose: () => void;
 };
 
 export const UserDetailModal:FC<Props>= memo((props)=>{
-    const { isOpen, onClose} = props;
+    const { user, isOpen, onClose} = props;
 
     return(
         <Modal 
@@ -23,27 +25,27 @@ export const UserDetailModal:FC<Props>= memo((props)=>{
                             <Stack spacing={4}>
                                 <FormControl>
                                     <FormLabel>
-                                        nimi
+                                        nimi: 
                                     </FormLabel>
-                                    <Input value="Tomoko" isReadOnly />
+                                    <Input value={user?.name} isReadOnly />
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel>
-                                        Fullname
+                                        <p>Fullname</p>
                                     </FormLabel>
-                                    <Input value="Tomoko Uehara" isReadOnly />
+                                    <Input value={user?.username} isReadOnly />
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel>
                                         Email
                                     </FormLabel>
-                                    <Input value="Email" isReadOnly />
+                                    <Input value={user?.email} isReadOnly />
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel>
                                         tel
                                     </FormLabel>
-                                    <Input value="123456" isReadOnly />
+                                    <Input value={user?.phone} isReadOnly />
                                 </FormControl>
                             </Stack>
                         </ModalBody>

@@ -2,17 +2,22 @@
 import { memo,FC, useEffect, useCallback } from "react"
 import { Center,  Spinner, Wrap, WrapItem, useDisclosure } from "@chakra-ui/react";
 import { UserCard } from "../organisms/user/UserCard";
-import { useAllUsers } from "../../hooks/useAllUsers";
 import { UserDetailModal } from "../organisms/user/UserDetailModal";
+import { useAllUsers } from "../../hooks/useAllUsers";
+import { useSelectUser } from "../../hooks/useSelectUser";
 
 const UserManagement:FC = memo(()=>{
 
     const { getUsers, users, loading} = useAllUsers();
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { selectedUser, onSelectUser} = useSelectUser();
+    console.log('selectedUser: ', selectedUser);
 
     useEffect(()=>getUsers(),[]);
 
-    const onClickUser = useCallback(() =>onOpen(),[]);
+    const onClickUser = useCallback((id:number) =>{
+        onSelectUser({id, users, onOpen });
+    },[users, onSelectUser, onOpen]);
 
     return(
         <>
@@ -25,6 +30,7 @@ const UserManagement:FC = memo(()=>{
                 {users.map((user)=>(
                     <WrapItem key={user.id} mx="auto">
                         <UserCard 
+                        id={user.id}
                         imageUrl={"https://picsum.photos/160"} 
                         username={user.username}
                         fullName={user.name}
@@ -34,46 +40,7 @@ const UserManagement:FC = memo(()=>{
                 ))}
             </Wrap>
         )}
-        <UserDetailModal isOpen={isOpen} onClose={onClose} />
-        {/* <Modal 
-        isOpen={isOpen} 
-        onClose={onClose} 
-        autoFocus={false}
-        motionPreset="slideInBottom">
-            <ModalOverlay />
-            <ModalContent pb={6}>
-                <ModalHeader>User Details</ModalHeader>
-                    <ModalCloseButton />
-                        <ModalBody mx={4}>
-                            <Stack spacing={4}>
-                                <FormControl>
-                                    <FormLabel>
-                                        nimi
-                                    </FormLabel>
-                                    <Input value="Tomoko" isReadOnly />
-                                </FormControl>
-                                <FormControl>
-                                    <FormLabel>
-                                        Fullname
-                                    </FormLabel>
-                                    <Input value="Tomoko Uehara" isReadOnly />
-                                </FormControl>
-                                <FormControl>
-                                    <FormLabel>
-                                        Email
-                                    </FormLabel>
-                                    <Input value="Email" isReadOnly />
-                                </FormControl>
-                                <FormControl>
-                                    <FormLabel>
-                                        tel
-                                    </FormLabel>
-                                    <Input value="123456" isReadOnly />
-                                </FormControl>
-                            </Stack>
-                        </ModalBody>
-            </ModalContent>
-        </Modal> */}
+        <UserDetailModal user={selectedUser} isOpen={isOpen} onClose={onClose} />
         </>
     );
 });
